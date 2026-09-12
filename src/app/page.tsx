@@ -1,69 +1,64 @@
-import Image from "next/image";
+﻿import { Navbar } from '@/components/Navbar';
+import { ImpactSimulator } from '@/components/ImpactSimulator';
+import { Hero } from '@/components/Hero';
+import { TechMarquee } from '@/components/TechMarquee';
+import { About } from '@/components/About';
+import { Certifications } from '@/components/Certifications';
+import { Projects } from '@/components/Projects';
+import { InteractiveLab } from '@/components/InteractiveLab';
+import { TypewriterLogo } from '@/components/TypewriterLogo';
+import { Contact } from '@/components/Contact';
+
+import { CommandPalette } from '@/components/CommandPalette';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-emerald-500 selection:text-zinc-950 font-sans relative overflow-x-hidden">
+      
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-emerald-500/12 blur-[140px] animate-aurora-1" />
+        <div className="absolute top-1/3 -right-24 w-[450px] h-[450px] rounded-full bg-teal-500/10 blur-[130px] animate-aurora-2" />
+        <div className="absolute bottom-1/4 left-10 w-[550px] h-[550px] rounded-full bg-indigo-500/10 blur-[160px] animate-aurora-1" />
+        
+        {/* Malha técnica suave */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, #3f3f46 1px, transparent 1px), linear-gradient(to bottom, #3f3f46 1px, transparent 1px)',
+            backgroundSize: '4rem 4rem',
+            maskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%, #000 60%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%, #000 60%, transparent 100%)',
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        <div
+          className="absolute inset-0 opacity-[0.015]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <Hero />
+          <TechMarquee />
+          <About />
+          <Certifications />
+          <ImpactSimulator />
+          <InteractiveLab />
+          <TypewriterLogo />
+          <Projects />
+          <Contact />
+        <CommandPalette />
+        </main>
+
+
+        <footer className="py-10 border-t border-zinc-900 bg-zinc-950/60 backdrop-blur-md text-center text-xs text-zinc-500 font-mono">
+          <p>© {new Date().getFullYear()} • Projetado com foco em arquitetura limpa, performance e conversão.</p>
+        </footer>
+      </div>
     </div>
   );
 }
