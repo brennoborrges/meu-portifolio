@@ -36,7 +36,7 @@ const projects: Project[] = [
       'Projeto acadêmico de design de produto desenvolvido no Figma. Focado na criação de uma interface limpa e intuitiva, aplicando métodos e fundamentos de usabilidade.',
     category: 'Product Design & UX/UI',
     tags: ['Figma', 'UX Research', 'Prototipagem', 'Design Systems'],
-    liveUrl: 'https://www.figma.com/design/k5ujEHfB27Zs32INuSpCmo/Trabalho-UX',
+    liveUrl: ' https://www.figma.com/design/MrTcW5npNdPRL3gVRFuOOR/Trabalho-UX--Community-?node-id=0-1&t=Shd0zeuW3wbEVjnM-1',
     architecture: [
       { file: 'Design System / Tokens', role: 'Padronização de tipografia, cores e componentes de leitura' },
       { file: 'Wireframing & Flow', role: 'Mapeamento de jornada do usuário na descoberta de títulos' },
