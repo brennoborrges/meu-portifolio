@@ -2,6 +2,9 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { StageExplorer } from './StageExplorer';
+import { AccordionGroup } from './AccordionGroup';
+import type { AccordionEntry } from './AccordionGroup';
 
 export const metadata: Metadata = {
   title: 'Authentic CRM (HubSpot) | Estudo de caso',
@@ -203,7 +206,264 @@ const tdClass = 'px-4 py-2.5 border-t border-zinc-800/60 align-top';
 /* PÁGINA                                                              */
 /* ------------------------------------------------------------------ */
 
+
+
+/* ------------------------------------------------------------------ */
+/* PÁGINA                                                              */
+/* ------------------------------------------------------------------ */
+
 export default function AuthenticCrmCaseStudy() {
+  // Uma etapa aberta = um negócio simulado (a probabilidade do negócio é a da etapa).
+  const openStages = stages
+    .filter((s) => s.prob !== '100%' && s.prob !== '0%')
+    .map((s) => {
+      const prob = parseInt(s.prob, 10);
+      const deal = deals.find((d) => d.prob === prob);
+      return {
+        name: s.name,
+        prob,
+        rule: s.rule.charAt(0).toLowerCase() + s.rule.slice(1),
+        deal: deal ? { name: deal.name, vertical: deal.vertical, value: deal.value } : undefined,
+      };
+    });
+
+  const entries: AccordionEntry[] = [
+    {
+      id: 'contexto',
+      label: 'Contexto e problema',
+      title: 'Um produto, quatro tipos de cliente',
+      content: (
+        <>
+          <Prose>
+            A Authentic é um aplicativo em React, que eu mesmo desenvolvi, para identificar imagens criadas por IA (
+            <a
+              href="https://projeto-authentic.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 decoration-emerald-400/40"
+            >
+              ver a aplicação
+            </a>
+            ). Para este projeto, reposicionei o produto como uma solução B2B para quatro tipos de cliente:
+          </Prose>
+          <ul className="space-y-2 max-w-3xl">
+            {verticals.map((v) => (
+              <li key={v.name} className="text-[15px] leading-7 text-zinc-300">
+                <span className="font-semibold text-zinc-100">{v.name}:</span> {v.text}
+              </li>
+            ))}
+          </ul>
+          <Prose>
+            Sem um processo, a Authentic teria quatro tipos de lead com necessidades diferentes e nenhum jeito de saber de
+            onde cada um veio, em que ponto da conversa está ou quanto pode render. Isso impede priorizar o contato,
+            repetir o que funciona e prever receita. O objetivo foi montar no HubSpot uma estrutura que responda a quatro
+            perguntas:
+          </Prose>
+          <ol className="space-y-2 max-w-3xl list-decimal list-inside marker:text-emerald-400 marker:font-mono">
+            {questions.map((q) => (
+              <li key={q} className="text-[15px] leading-7 text-zinc-300">
+                {q}
+              </li>
+            ))}
+          </ol>
+        </>
+      ),
+    },
+    {
+      id: 'propriedades',
+      label: 'Segmentação',
+      title: 'Propriedades personalizadas de contato',
+      content: (
+        <>
+          <Prose>
+            Criei três propriedades no objeto Contato. Usei lista fechada em Vertical e Origem do lead para poder filtrar
+            e montar relatórios sem variações de escrita.
+          </Prose>
+          <Table head={['Propriedade', 'Tipo', 'Opções / uso']}>
+            {properties.map((p) => (
+              <tr key={p.name}>
+                <td className={`${tdClass} font-semibold text-zinc-100 whitespace-nowrap`}>{p.name}</td>
+                <td className={`${tdClass} whitespace-nowrap`}>{p.type}</td>
+                <td className={tdClass}>{p.options}</td>
+              </tr>
+            ))}
+          </Table>
+          <Shot
+            file="02-propriedades-contatos.png"
+            alt="Lista de propriedades de contato no HubSpot mostrando Vertical, Origem do lead e Caso de uso, criadas por Brenno Gabriel"
+            width={1419}
+            height={639}
+            caption="As três propriedades criadas no objeto Contato."
+          />
+        </>
+      ),
+    },
+    {
+      id: 'pipeline',
+      label: 'Pipeline',
+      title: 'Configuração das etapas no HubSpot',
+      content: (
+        <>
+          <Prose>
+            O pipeline <span className="font-mono text-emerald-300">Authentic - Vendas B2B</span> tem 5 etapas abertas e
+            as duas de fechamento. Cada etapa tem um critério de entrada e uma probabilidade de fechamento.
+          </Prose>
+          <Table head={['Etapa', 'Probabilidade', 'Critério de entrada']}>
+            {stages.map((s) => (
+              <tr key={s.name}>
+                <td className={`${tdClass} font-semibold text-zinc-100 whitespace-nowrap`}>{s.name}</td>
+                <td className={`${tdClass} font-mono whitespace-nowrap`}>{s.prob}</td>
+                <td className={tdClass}>{s.rule}</td>
+              </tr>
+            ))}
+          </Table>
+          <Shot
+            file="01-pipeline-configuracao.png"
+            alt="Configuração do pipeline Authentic - Vendas B2B no HubSpot, com as sete fases, descrições, cores e probabilidades"
+            width={1180}
+            height={801}
+            caption="Configuração do pipeline no HubSpot."
+          />
+        </>
+      ),
+    },
+    {
+      id: 'base',
+      label: 'Dados',
+      title: 'Base fictícia para testar a estrutura',
+      content: (
+        <>
+          <Prose>
+            Para testar a estrutura, cadastrei 4 empresas (uma por vertical), 9 contatos com cargo, vertical, origem do
+            lead, caso de uso e status, e 5 negócios com valor, data de fechamento prevista, prioridade e tipo de
+            negócio, todos associados entre si.
+          </Prose>
+          <Shot
+            file="04-lista-empresas.png"
+            alt="Lista de empresas no HubSpot com Agência Pixel & Prosa, Colégio Aurora Digital, Vitrine Nova Store e Diário Horizonte"
+            width={1589}
+            height={811}
+            caption="Empresas cadastradas, com cidade, setor e número de contatos associados."
+          />
+          <Shot
+            file="03-lista-contatos.png"
+            alt="Lista de nove contatos no HubSpot com colunas de vertical, status do lead, origem do lead e empresa principal"
+            width={1648}
+            height={761}
+            caption="Contatos segmentados por vertical e origem do lead, ligados às empresas."
+          />
+          <Shot
+            file="06-detalhe-negocio.png"
+            alt="Detalhe do negócio Diário Horizonte - Verificação de imagens na redação, na etapa Proposta enviada, com contato e empresa associados"
+            width={1648}
+            height={838}
+            caption="Um negócio aberto, com contato e empresa associados."
+          />
+        </>
+      ),
+    },
+    {
+      id: 'decisoes',
+      label: 'Decisões',
+      title: 'Por que montei assim',
+      content: (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {decisions.map((d) => (
+            <div key={d.title} className="rounded-xl border border-zinc-800/80 bg-zinc-950/50 p-5 space-y-2">
+              <h4 className="text-base font-semibold text-zinc-100">{d.title}</h4>
+              <p className="text-sm leading-6 text-zinc-400">{d.text}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 'resultado',
+      label: 'Resultado da simulação',
+      title: 'O que os números mostram',
+      content: (
+        <>
+          <Table head={['Indicador', 'Valor']}>
+            <tr>
+              <td className={tdClass}>Negócios abertos</td>
+              <td className={`${tdClass} font-mono`}>{deals.length}</td>
+            </tr>
+            <tr>
+              <td className={tdClass}>Valor total do pipeline</td>
+              <td className={`${tdClass} font-mono`}>{brl(total)}</td>
+            </tr>
+            <tr>
+              <td className={tdClass}>Valor ponderado pela probabilidade</td>
+              <td className={`${tdClass} font-mono`}>{brl(weighted)}</td>
+            </tr>
+          </Table>
+
+          <div className="space-y-3 max-w-3xl pt-2">
+            <h4 className="text-sm font-mono text-zinc-400">Valor em aberto por vertical</h4>
+            {byVertical.map((v) => (
+              <div key={v.vertical} className="space-y-1">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-zinc-300">{v.vertical}</span>
+                  <span className="text-zinc-500">
+                    {brl(v.value)} · {pct(v.share)}
+                  </span>
+                </div>
+                <div className="h-2 rounded-full bg-zinc-800/80 overflow-hidden">
+                  <div className="h-full rounded-full bg-emerald-400" style={{ width: `${v.share}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <Prose>
+            Os dois negócios mais avançados (Proposta enviada e Negociação) respondem por R$ 36.000 dos {brl(weighted)} do
+            valor ponderado. É o dinheiro que mereceria mais atenção de um time comercial. Entre os 9 contatos, a origem
+            do lead se divide em 3 por indicação, 2 pelo site, 2 pelo LinkedIn e 2 por eventos.
+          </Prose>
+        </>
+      ),
+    },
+    {
+      id: 'aprendizados',
+      label: 'O que aprendi',
+      title: 'Problemas reais que apareceram na montagem',
+      content: (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {learnings.map((l) => (
+            <div key={l.title} className="rounded-xl border border-zinc-800/80 bg-zinc-950/50 p-5 space-y-2">
+              <h4 className="text-base font-semibold text-zinc-100">{l.title}</h4>
+              <p className="text-sm leading-6 text-zinc-400">{l.text}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 'limites',
+      label: 'Limitações e próximos passos',
+      title: 'O que este projeto é, o que não é e o que vem depois',
+      content: (
+        <>
+          <ul className="space-y-2 max-w-3xl list-disc list-inside marker:text-emerald-400">
+            {limitations.map((l) => (
+              <li key={l} className="text-[15px] leading-7 text-zinc-300">
+                {l}
+              </li>
+            ))}
+          </ul>
+          <h4 className="pt-2 text-sm font-mono text-zinc-400">Próximos passos</h4>
+          <ol className="space-y-2 max-w-3xl list-decimal list-inside marker:text-emerald-400 marker:font-mono">
+            {nextSteps.map((s) => (
+              <li key={s} className="text-[15px] leading-7 text-zinc-300">
+                {s}
+              </li>
+            ))}
+          </ol>
+        </>
+      ),
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
       <article className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">
@@ -273,206 +533,14 @@ export default function AuthenticCrmCaseStudy() {
           />
         </div>
 
-        {/* Contexto */}
-        <Section label="Contexto" title="Um produto, quatro tipos de cliente">
-          <Prose>
-            A Authentic é um aplicativo em React, que eu mesmo desenvolvi, para identificar imagens criadas por IA (
-            <a
-              href="https://projeto-authentic.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 decoration-emerald-400/40"
-            >
-              ver a aplicação
-            </a>
-            ). Para este projeto, reposicionei o produto como uma solução B2B para quatro tipos de cliente:
-          </Prose>
-          <ul className="space-y-2 max-w-3xl">
-            {verticals.map((v) => (
-              <li key={v.name} className="text-[15px] leading-7 text-zinc-300">
-                <span className="font-semibold text-zinc-100">{v.name}:</span> {v.text}
-              </li>
-            ))}
-          </ul>
+        {/* Funil interativo */}
+        <Section label="Funil interativo" title="Percorra o pipeline etapa por etapa">
+          <StageExplorer stages={openStages} />
         </Section>
 
-        {/* Problema e objetivo */}
-        <Section label="Problema e objetivo" title="Sem processo comercial, não dá para priorizar nem prever">
-          <Prose>
-            Sem um processo, a Authentic teria quatro tipos de lead com necessidades diferentes e nenhum jeito de saber de
-            onde cada um veio, em que ponto da conversa está ou quanto pode render. Isso impede priorizar o contato,
-            repetir o que funciona e prever receita. O objetivo foi montar no HubSpot uma estrutura que responda a
-            quatro perguntas:
-          </Prose>
-          <ol className="space-y-2 max-w-3xl list-decimal list-inside marker:text-emerald-400 marker:font-mono">
-            {questions.map((q) => (
-              <li key={q} className="text-[15px] leading-7 text-zinc-300">
-                {q}
-              </li>
-            ))}
-          </ol>
-        </Section>
-
-        {/* Solução */}
-        <Section label="Solução" title="Propriedades, pipeline e uma base de dados para testar">
-          <h3 className="text-lg font-semibold text-zinc-100">1. Propriedades personalizadas</h3>
-          <Prose>
-            Criei três propriedades no objeto Contato. Usei lista fechada em Vertical e Origem do lead para poder
-            filtrar e montar relatórios sem variações de escrita.
-          </Prose>
-          <Table head={['Propriedade', 'Tipo', 'Opções / uso']}>
-            {properties.map((p) => (
-              <tr key={p.name}>
-                <td className={`${tdClass} font-semibold text-zinc-100 whitespace-nowrap`}>{p.name}</td>
-                <td className={`${tdClass} whitespace-nowrap`}>{p.type}</td>
-                <td className={tdClass}>{p.options}</td>
-              </tr>
-            ))}
-          </Table>
-          <Shot
-            file="02-propriedades-contatos.png"
-            alt="Lista de propriedades de contato no HubSpot mostrando Vertical, Origem do lead e Caso de uso, criadas por Brenno Gabriel"
-            width={1419}
-            height={639}
-            caption="As três propriedades criadas no objeto Contato."
-          />
-
-          <h3 className="text-lg font-semibold text-zinc-100 pt-4">2. Pipeline de vendas</h3>
-          <Prose>
-            O pipeline <span className="font-mono text-emerald-300">Authentic - Vendas B2B</span> tem 5 etapas abertas
-            e as duas de fechamento. Cada etapa tem um critério de entrada e uma probabilidade de fechamento.
-          </Prose>
-          <Table head={['Etapa', 'Probabilidade', 'Critério de entrada']}>
-            {stages.map((s) => (
-              <tr key={s.name}>
-                <td className={`${tdClass} font-semibold text-zinc-100 whitespace-nowrap`}>{s.name}</td>
-                <td className={`${tdClass} font-mono whitespace-nowrap`}>{s.prob}</td>
-                <td className={tdClass}>{s.rule}</td>
-              </tr>
-            ))}
-          </Table>
-          <Shot
-            file="01-pipeline-configuracao.png"
-            alt="Configuração do pipeline Authentic - Vendas B2B no HubSpot, com as sete fases, descrições, cores e probabilidades"
-            width={1180}
-            height={801}
-            caption="Configuração do pipeline no HubSpot."
-          />
-
-          <h3 className="text-lg font-semibold text-zinc-100 pt-4">3. Base de dados fictícia</h3>
-          <Prose>
-            Para testar a estrutura, cadastrei 4 empresas (uma por vertical), 9 contatos com cargo, vertical, origem do
-            lead, caso de uso e status, e 5 negócios com valor, data de fechamento prevista, prioridade e tipo de
-            negócio, todos associados entre si.
-          </Prose>
-          <Shot
-            file="04-lista-empresas.png"
-            alt="Lista de empresas no HubSpot com Agência Pixel & Prosa, Colégio Aurora Digital, Vitrine Nova Store e Diário Horizonte"
-            width={1589}
-            height={811}
-            caption="Empresas cadastradas, com cidade, setor e número de contatos associados."
-          />
-          <Shot
-            file="03-lista-contatos.png"
-            alt="Lista de nove contatos no HubSpot com colunas de vertical, status do lead, origem do lead e empresa principal"
-            width={1648}
-            height={761}
-            caption="Contatos segmentados por vertical e origem do lead, ligados às empresas."
-          />
-          <Shot
-            file="06-detalhe-negocio.png"
-            alt="Detalhe do negócio Diário Horizonte - Verificação de imagens na redação, na etapa Proposta enviada, com contato e empresa associados"
-            width={1648}
-            height={838}
-            caption="Um negócio aberto, com contato e empresa associados."
-          />
-        </Section>
-
-        {/* Decisões */}
-        <Section label="Decisões" title="Por que montei assim">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {decisions.map((d) => (
-              <div key={d.title} className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-5 space-y-2">
-                <h3 className="text-base font-semibold text-zinc-100">{d.title}</h3>
-                <p className="text-sm leading-6 text-zinc-400">{d.text}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* Resultado */}
-        <Section label="Resultado da simulação" title="O que os números mostram">
-          <Table head={['Indicador', 'Valor']}>
-            <tr>
-              <td className={tdClass}>Negócios abertos</td>
-              <td className={`${tdClass} font-mono`}>{deals.length}</td>
-            </tr>
-            <tr>
-              <td className={tdClass}>Valor total do pipeline</td>
-              <td className={`${tdClass} font-mono`}>{brl(total)}</td>
-            </tr>
-            <tr>
-              <td className={tdClass}>Valor ponderado pela probabilidade</td>
-              <td className={`${tdClass} font-mono`}>{brl(weighted)}</td>
-            </tr>
-          </Table>
-
-          <div className="space-y-3 max-w-3xl pt-2">
-            <h3 className="text-sm font-mono text-zinc-400">Valor em aberto por vertical</h3>
-            {byVertical.map((v) => (
-              <div key={v.vertical} className="space-y-1">
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-zinc-300">{v.vertical}</span>
-                  <span className="text-zinc-500">
-                    {brl(v.value)} · {pct(v.share)}
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-zinc-800/80 overflow-hidden">
-                  <div className="h-full rounded-full bg-emerald-400" style={{ width: `${v.share}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Prose>
-            Os dois negócios mais avançados (Proposta enviada e Negociação) respondem por R$ 36.000 dos {brl(weighted)} do
-            valor ponderado. É o dinheiro que mereceria mais atenção de um time comercial. Entre os 9 contatos, a origem
-            do lead se divide em 3 por indicação, 2 pelo site, 2 pelo LinkedIn e 2 por eventos.
-          </Prose>
-        </Section>
-
-        {/* Limitações */}
-        <Section label="Limitações" title="O que este projeto é e o que não é">
-          <ul className="space-y-2 max-w-3xl list-disc list-inside marker:text-emerald-400">
-            {limitations.map((l) => (
-              <li key={l} className="text-[15px] leading-7 text-zinc-300">
-                {l}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {/* Aprendizados */}
-        <Section label="O que aprendi" title="Problemas reais que apareceram na montagem">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {learnings.map((l) => (
-              <div key={l.title} className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-5 space-y-2">
-                <h3 className="text-base font-semibold text-zinc-100">{l.title}</h3>
-                <p className="text-sm leading-6 text-zinc-400">{l.text}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* Próximos passos */}
-        <Section label="Próximos passos" title="O que vem depois">
-          <ol className="space-y-2 max-w-3xl list-decimal list-inside marker:text-emerald-400 marker:font-mono">
-            {nextSteps.map((s) => (
-              <li key={s} className="text-[15px] leading-7 text-zinc-300">
-                {s}
-              </li>
-            ))}
-          </ol>
+        {/* Detalhes em blocos */}
+        <Section label="Detalhes" title="Abra o bloco que quiser ver">
+          <AccordionGroup items={entries} defaultOpen="decisoes" />
         </Section>
 
         {/* Rodapé */}
