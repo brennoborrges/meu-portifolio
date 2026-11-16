@@ -99,7 +99,7 @@ const decisions = [
 
 const limitations = [
   'Os dados são fictícios. Os números mostram como a estrutura funciona, não o desempenho de uma operação real.',
-  'Não há automações. O plano gratuito do HubSpot limita fluxos de trabalho, então não implementei tarefas automáticas por etapa.',
+  'Não implementei automações nesta versão, como tarefas automáticas por etapa.',
   'Não há sequência de e-mails de nutrição nem integração com o GA4. Ficaram para a próxima etapa.',
 ];
 
